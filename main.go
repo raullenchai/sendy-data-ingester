@@ -48,7 +48,7 @@ func init() {
 		log.Println(err)
 		return
 	}
-	l = log.New(file, " ", log.Lshortfile)
+	l = log.New(file, " ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
 	l.SetOutput(os.Stdout)
 }
 func openDB(cfg config) (*sql.DB, error) {
@@ -89,7 +89,6 @@ func readAndWrite(s *sql.DB, cfg config) {
 		email := records[1]
 
 		insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES ('%s',' %s')", cfg.TableName, name, email)
-		l.Println(insertQuery)
 		if _, err = s.Query(insertQuery); err != nil {
 			l.Println(name, ":", email, " write error:", err)
 		}
