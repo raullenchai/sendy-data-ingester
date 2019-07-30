@@ -33,7 +33,7 @@ var (
 func init() {
 	flag.Usage = func() {
 		_, _ = fmt.Fprintf(os.Stderr,
-			"usage: csvtomysql -config=config.toml -csv=csv.csv -log=s.log -line=500000 -sleep=3 -logtofile\n")
+			"usage: main -config=config.toml -csv=sample.csv -log=s.log -line=500000 -sleep=3 -logtofile\n")
 		flag.PrintDefaults()
 		os.Exit(2)
 	}
@@ -55,6 +55,7 @@ func init() {
 		l.SetOutput(os.Stdout)
 	}
 }
+
 func openDB(cfg config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName)
 	if err != nil {
@@ -62,6 +63,7 @@ func openDB(cfg config) (*sql.DB, error) {
 	}
 	return db, nil
 }
+
 func readAndWrite(s *sql.DB, cfg config) {
 	f, err := os.Open(csvPath)
 	if err != nil {
@@ -104,6 +106,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 		}
 	}
 }
+
 func main() {
 	var cfg config
 	utils.LoadConfig(configPath, &cfg)
