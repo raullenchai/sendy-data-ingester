@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	_ "github.com/go-sql-driver/mysql"
 )
 type config struct {
 	MysqlConnectString string`json:"mysqlConnectString,omitempty"`
@@ -60,7 +61,7 @@ func readAndWrite(s *sql.DB){
 			fmt.Println(err)
 			return
 		}
-		
+
 		fmt.Println(record)
 		fmt.Println(len(record))
 		for value := range record {
