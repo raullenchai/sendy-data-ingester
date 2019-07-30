@@ -10,7 +10,7 @@ type config struct {
 }
 func main() {
 	var configPath string
-	flag.StringVar(&configPath, "config", "config.yaml", "path of config file")
+	flag.StringVar(&configPath, "config", "config.toml", "path of config file")
 	flag.Parse()
 	var cfg config
 	utils.LoadConfig(configPath,cfg)
