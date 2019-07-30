@@ -81,7 +81,6 @@ func readAndWrite(s *sql.DB, cfg config) {
 			continue
 		}
 		i++
-		log.Println("xxx")
 		if uint64(i)%line == 0 {
 			log.Println("sleep for a while")
 			time.Sleep(time.Second * time.Duration(sleepSeconds))
