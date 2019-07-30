@@ -13,7 +13,7 @@ func main() {
 	flag.StringVar(&configPath, "config", "config.toml", "path of config file")
 	flag.Parse()
 	var cfg config
-	utils.LoadConfig(configPath,cfg)
+	utils.LoadConfig(configPath,&cfg)
 	fmt.Println("::",cfg)
 
 	select {}
