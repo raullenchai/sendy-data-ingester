@@ -1,3 +1,3 @@
-module github.com/lzxm160/csvtomysql
+module csvtomysql
 
 go 1.12
