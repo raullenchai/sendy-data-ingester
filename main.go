@@ -52,7 +52,7 @@ func init() {
 	l.SetOutput(os.Stdout)
 }
 func openDB(cfg config) (*sql.DB, error) {
-	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName+"?autocommit=false")
+	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName)
 	if err != nil {
 		return nil, err
 	}
@@ -87,9 +87,10 @@ func readAndWrite(s *sql.DB, cfg config) {
 		}
 		name := records[0]
 		email := records[1]
+
 		insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES ('%s',' %s')", cfg.TableName, name, email)
 		l.Println(insertQuery)
-		if _, err = s.Exec(insertQuery); err != nil {
+		if _, err = s.Query(insertQuery); err != nil {
 			l.Println(name, ":", email, " write error:", err)
 		}
 	}
