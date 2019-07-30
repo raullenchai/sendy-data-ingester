@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/csv"
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/lzxm160/csvtomysql/utils"
@@ -21,8 +24,10 @@ type config struct {
 var (
 	configPath   string
 	csvPath      string
+	logPath      string
 	line         uint64
 	sleepSeconds uint64
+	l            *log.Logger
 )
 
 func init() {
@@ -34,9 +39,13 @@ func init() {
 	}
 	flag.StringVar(&configPath, "config", "config.toml", "path of config file")
 	flag.StringVar(&csvPath, "csv", "csv.csv", "path of csv file")
+	flag.StringVar(&logPath, "log", "log.log", "path of log file")
 	flag.Uint64Var(&line, "line", 500000, "line")
 	flag.Uint64Var(&sleepSeconds, "sleep", 3, "sleep")
 	flag.Parse()
+
+	var buf bytes.Buffer
+	l = log.New(&buf, " ", log.Lshortfile)
 }
 func openDB(cfg config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName+"?autocommit=false")
@@ -45,39 +54,50 @@ func openDB(cfg config) (*sql.DB, error) {
 	}
 	return db, nil
 }
-func readAndWrite(s *sql.DB) {
+func readAndWrite(s *sql.DB, cfg config) {
 	f, err := os.Open(csvPath)
 	if err != nil {
-		fmt.Println(err)
+		l.Println(err)
 		return
 	}
 	r := csv.NewReader(f)
 	for {
-		record, err := r.Read()
+		records, err := r.Read()
 		if err == io.EOF {
 			break
 		}
-
 		if err != nil {
-			fmt.Println(err)
+			l.Println(err)
 			return
 		}
 
-		for value := range record {
-			fmt.Printf(" value:%v %v\n", value, record[value])
+		for i, record := range records {
+			if i == 0 {
+				continue
+			}
+			if uint64(i)%line == 0 {
+				time.Sleep(time.Second * time.Duration(sleepSeconds))
+			}
+			name := record[0]
+			email := record[1]
+			l.Println(name, ":", email)
+			insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES (%s, %s)", cfg.TableName, name, email)
+			if _, err = s.Exec(insertQuery); err != nil {
+				l.Println(err)
+			}
 		}
 	}
 }
 func main() {
 	var cfg config
 	utils.LoadConfig(configPath, &cfg)
-	fmt.Println("config:", cfg)
+	l.Println("config:", cfg)
 	db, err := openDB(cfg)
 	defer db.Close()
 
 	if err != nil {
-		fmt.Println(err)
+		l.Println(err)
 		return
 	}
-	readAndWrite(db)
+	readAndWrite(db, cfg)
 }
