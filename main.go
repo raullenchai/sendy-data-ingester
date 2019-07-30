@@ -64,6 +64,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 		return
 	}
 	r := csv.NewReader(f)
+	i := uint64(0)
 	for {
 		records, err := r.Read()
 		if err == io.EOF {
@@ -73,21 +74,20 @@ func readAndWrite(s *sql.DB, cfg config) {
 			l.Println(err)
 			return
 		}
-
-		for i, record := range records {
-			if i == 0 {
-				continue
-			}
-			if uint64(i)%line == 0 {
-				time.Sleep(time.Second * time.Duration(sleepSeconds))
-			}
-			name := record[0]
-			email := record[1]
-			l.Println(record)
-			insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES (%s, %s)", cfg.TableName, name, email)
-			if _, err = s.Exec(insertQuery); err != nil {
-				l.Println(err)
-			}
+		if i == 0 {
+			continue
+		}
+		i++
+		if uint64(i)%line == 0 {
+			log.Println("sleep for a while")
+			time.Sleep(time.Second * time.Duration(sleepSeconds))
+		}
+		name := records[0]
+		email := records[1]
+		l.Println(records)
+		insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES (%s, %s)", cfg.TableName, name, email)
+		if _, err = s.Exec(insertQuery); err != nil {
+			l.Println(err)
 		}
 	}
 }
