@@ -6,8 +6,9 @@ import (
 	"fmt"
 )
 type config struct {
-	mysqlConnectString string
+	MysqlConnectString string`json:"mysqlConnectString,omitempty"`
 }
+
 func main() {
 	var configPath string
 	flag.StringVar(&configPath, "config", "config.toml", "path of config file")
@@ -16,5 +17,5 @@ func main() {
 	utils.LoadConfig(configPath,&cfg)
 	fmt.Println("::",cfg)
 
-	select {}
+	//select {}
 }
