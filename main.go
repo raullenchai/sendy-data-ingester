@@ -21,18 +21,19 @@ type config struct {
 }
 
 var (
-	configPath   string
-	csvPath      string
-	logPath      string
-	line         uint64
-	sleepSeconds uint64
-	l            *log.Logger
+	configPath     string
+	csvPath        string
+	logPath        string
+	line           uint64
+	sleepSeconds   uint64
+	logWriteToFile bool
+	l              *log.Logger
 )
 
 func init() {
 	flag.Usage = func() {
 		_, _ = fmt.Fprintf(os.Stderr,
-			"usage: csvtomysql -config=[string] -csv=[string] -line=500000 -sleep=3\n")
+			"usage: csvtomysql -config=[string] -csv=[string] -line=500000 -sleep=3 -logtofile\n")
 		flag.PrintDefaults()
 		os.Exit(2)
 	}
@@ -41,6 +42,7 @@ func init() {
 	flag.StringVar(&logPath, "log", "log.log", "path of log file")
 	flag.Uint64Var(&line, "line", 500000, "line")
 	flag.Uint64Var(&sleepSeconds, "sleep", 3, "sleep")
+	flag.BoolVar(&logWriteToFile, "logtofile", false, "log to file")
 	flag.Parse()
 
 	file, err := os.Create(logPath)
@@ -49,7 +51,9 @@ func init() {
 		return
 	}
 	l = log.New(file, " ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
-	l.SetOutput(os.Stdout)
+	if !logWriteToFile {
+		l.SetOutput(os.Stdout)
+	}
 }
 func openDB(cfg config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName)
