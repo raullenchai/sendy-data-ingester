@@ -86,7 +86,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 		}
 		i++
 		if uint64(i)%line == 0 {
-			log.Println("sleep for a while")
+			l.Println("sleep for a while")
 			time.Sleep(time.Second * time.Duration(sleepSeconds))
 		}
 		name := records[0]
