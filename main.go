@@ -49,6 +49,7 @@ func init() {
 		return
 	}
 	l = log.New(file, " ", log.Lshortfile)
+	l.SetOutput(os.Stdout)
 }
 func openDB(cfg config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName+"?autocommit=false")
