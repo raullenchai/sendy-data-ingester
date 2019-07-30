@@ -23,7 +23,7 @@ func init() {
 		os.Exit(2)
 	}
 	flag.StringVar(&configPath, "config", "config.toml", "path of config file")
-	flag.StringVar(&csvPath, "csv", "config.toml", "path of config file")
+	flag.StringVar(&csvPath, "csv", "csv.csv", "path of csv file")
 	flag.Parse()
 }
 func main() {

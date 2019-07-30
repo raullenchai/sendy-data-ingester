@@ -12,9 +12,9 @@ func LoadConfig(configFileName string, cfg interface{}) bool {
 
 	var err error
 
-	if len(os.Args) > 1 {
-		configFileName = os.Args[1]
-	}
+	//if len(os.Args) > 1 {
+	//	configFileName = os.Args[1]
+	//}
 
 	configFileName, err = filepath.Abs(configFileName)
 	if err != nil {
