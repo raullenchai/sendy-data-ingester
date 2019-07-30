@@ -88,7 +88,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 		name := records[0]
 		email := records[1]
 		l.Println(records)
-		insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES (%s, %s)", cfg.TableName, name, email)
+		insertQuery := fmt.Sprintf("INSERT INTO %s (name, email) VALUES ('%s',' %s')", cfg.TableName, name, email)
 		if _, err = s.Exec(insertQuery); err != nil {
 			l.Println(err)
 		}
