@@ -28,7 +28,7 @@ var (
 func init() {
 	flag.Usage = func() {
 		_, _ = fmt.Fprintf(os.Stderr,
-			"usage: server -config=[string]\n")
+			"usage: csvtomysql -config=[string] -csv=[string] -line=500000 -sleep=3\n")
 		flag.PrintDefaults()
 		os.Exit(2)
 	}
@@ -63,8 +63,6 @@ func readAndWrite(s *sql.DB) {
 			return
 		}
 
-		//fmt.Println(record)
-		//fmt.Println(len(record))
 		for value := range record {
 			fmt.Printf(" value:%v %v\n", value, record[value])
 		}
