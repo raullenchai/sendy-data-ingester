@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/csv"
 	"flag"
@@ -44,8 +43,12 @@ func init() {
 	flag.Uint64Var(&sleepSeconds, "sleep", 3, "sleep")
 	flag.Parse()
 
-	var buf bytes.Buffer
-	l = log.New(&buf, " ", log.Lshortfile)
+	file, err := os.Create(logPath)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	l = log.New(file, " ", log.Lshortfile)
 }
 func openDB(cfg config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.MysqlConnectString+cfg.DbName+"?autocommit=false")
