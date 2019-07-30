@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./utils"
+	"github.com/lzxm160/csvtomysql/utils"
 	"flag"
 	"fmt"
 )
