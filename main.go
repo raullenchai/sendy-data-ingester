@@ -95,7 +95,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 			l.Println(err)
 			continue
 		}
-		res, err := stmt.Exec(time.Now(), 1)
+		res, err := stmt.Exec()
 		if err != nil || res == nil {
 			l.Println(name, ":", email, " write error:", err)
 		}
