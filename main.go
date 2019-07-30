@@ -67,7 +67,6 @@ func readAndWrite(s *sql.DB, cfg config) {
 	r := csv.NewReader(f)
 	i := uint64(0)
 	for {
-		fmt.Println("xx")
 		records, err := r.Read()
 		if err == io.EOF {
 			log.Println(err)
@@ -78,6 +77,7 @@ func readAndWrite(s *sql.DB, cfg config) {
 			return
 		}
 		if i == 0 {
+			i++
 			continue
 		}
 		i++
