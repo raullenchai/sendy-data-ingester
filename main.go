@@ -73,7 +73,6 @@ func readAndWrite(s *sql.DB, cfg config) {
 	for {
 		records, err := r.Read()
 		if err == io.EOF {
-			log.Println(err)
 			break
 		}
 		if err != nil {
