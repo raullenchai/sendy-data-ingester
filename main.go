@@ -33,7 +33,7 @@ var (
 func init() {
 	flag.Usage = func() {
 		_, _ = fmt.Fprintf(os.Stderr,
-			"usage: csvtomysql -config=[string] -csv=[string] -line=500000 -sleep=3 -logtofile\n")
+			"usage: csvtomysql -config=config.toml -csv=csv.csv -log=s.log -line=500000 -sleep=3 -logtofile\n")
 		flag.PrintDefaults()
 		os.Exit(2)
 	}
